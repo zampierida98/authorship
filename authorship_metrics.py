@@ -7,7 +7,8 @@ per stabilire se un testo è stato scritto da un autore
 
 @author: michele
 """
-import pyspark
+import os, pyspark
+os.environ['HADOOP_HOME'] = "C:\\winutils"
 sc = pyspark.SparkContext('local[*]')
 
 def word_counter(RDD):
@@ -42,9 +43,8 @@ def text_length_in_words(RDD_word_counter):
     
     # word_counter: [("word1", 100), ...]
     
-    return (RDD_word_counter.map(lambda x: ("text_length", x[1]))
-                            .reduceByKey(lambda a,b: a+b)
-                            .map(lambda x: x[1])
+    return (RDD_word_counter.map(lambda x: x[1])
+                            .reduce(lambda a,b: a+b)
            )
 		   
 def remove_number_some_punctuation_marks(row):
@@ -168,3 +168,13 @@ if __name__ == "__main__":
         
     # POSIAMO I DATI NELLA CACHE
     data.persist()
+    
+    '''
+    wc, l = word_counter(data)
+    print(l, wc.take(5))
+    tl = text_length_in_words(wc)
+    print(tl)
+    '''
+    
+    sc.stop()
+    

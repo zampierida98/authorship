@@ -1,4 +1,5 @@
-import pyspark, os
+import os, pyspark
+os.environ['HADOOP_HOME'] = "C:\\winutils"
 sc = pyspark.SparkContext('local[*]')
 
 '''
@@ -148,9 +149,10 @@ def main(file):
 	print('\n\n\n')
 
 
-
 path = ("./datasets/") #meglio usare os (vedi ia)
 filelist = os.listdir(path)
 #print(filelist)
 for file in filelist:
 	main(path+file)
+
+sc.stop()
