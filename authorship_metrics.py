@@ -11,6 +11,29 @@ import os, pyspark
 os.environ['HADOOP_HOME'] = "C:\\winutils"
 sc = pyspark.SparkContext('local[*]')
 
+def prob_of_the_most_common_word(RDD_word_counter, text_len):
+    return sc.parallelize(prob_distr_of_30_most_common_words(RDD_word_counter, text_len)
+                          .filter(lambda x: x[0] != "and" and x[0] != "the")
+                          .take(1)
+                         )
+
+def prob_of_The(RDD_word_counter, text_len):
+    return (RDD_word_counter.filter(lambda x: x[0] == "the")
+           .map(lambda x: (x[0], x[1]/text_len))
+           )
+
+def prob_distr_of_30_most_common_words(RDD_word_counter, text_len):
+    # probability distribution
+    return sc.parallelize(RDD_word_counter.map(lambda x: (x[0], x[1]/text_len)).take(30))
+
+def hentropy(RDD_word_counter, text_len):
+    import math
+    
+    return (RDD_word_counter.map(lambda x: (x[1]/text_len) * math.log2(x[1]/text_len))
+                            .reduce(lambda a,b: a+b)
+                            .map(lambda x: -x[1])    # entropia ha segno negativo
+           )
+
 def word_counter(RDD):
     '''
     funzione che dato un RDD conta il numero di volte che compare una parola.
@@ -43,9 +66,16 @@ def text_length_in_words(RDD_word_counter):
     
     # word_counter: [("word1", 100), ...]
     
-    return (RDD_word_counter.map(lambda x: x[1])
-                            .reduce(lambda a,b: a+b)
+    return sc.parallelize(RDD_word_counter.map(lambda x: x[1])
+                          .reduce(lambda a,b: a+b)
            )
+
+def getCollection(RDD):
+    return RDD.collect()
+
+def getValue(RDD):
+    return RDD.collect()[0]
+
 		   
 def remove_number_some_punctuation_marks(row):
     '''
@@ -169,12 +199,35 @@ if __name__ == "__main__":
     # POSIAMO I DATI NELLA CACHE
     data.persist()
     
-    '''
-    wc, l = word_counter(data)
-    print(l, wc.take(5))
-    tl = text_length_in_words(wc)
-    print(tl)
-    '''
+    #%%
     
+    print("Calcoliamo l'RDD del word_counter ... ", end=" ")
+    RDD_word_counter, vocabulary_size = word_counter(data)
+    print("calcolo completato")
+    
+    print("text_length_in_word ... ", end=" ")
+    RDD_text_length = text_length_in_words(RDD_word_counter)
+    print(getValue(RDD_text_length))
+    
+    print("Rapporto V/T: ", vocabulary_size/getValue(RDD_text_length))
+    
+    print("Calcolo entropia ... ", end=" ")
+    RDD_hentropy = hentropy(RDD_word_counter, getValue(RDD_text_length))
+    print(getValue(RDD_hentropy))
+    
+    #%%
+    print("Calcolo della distribuzione di probabilità delle 30 parole più comuni ...", end=" ")
+    RDD_prob_distr_of_30 = prob_distr_of_30_most_common_words(RDD_word_counter, getValue(RDD_text_length))
+    print(getCollection(RDD_prob_distr_of_30), end="\n\n")
+    
+    print("Calcolo della probabilità di the ...", end=" ")
+    RDD_prob_the = prob_of_The(RDD_word_counter, getValue(RDD_text_length))
+    print(getValue(RDD_prob_the))
+    
+    print("Calcolo della probabilità della parola più comune escluso the e and ...", end=" ")
+    RDD_prob_the_most_common_word = prob_of_the_most_common_word(RDD_word_counter, getValue(RDD_text_length))
+    print(getValue(RDD_prob_the_most_common_word))
+    
+
     sc.stop()
     
