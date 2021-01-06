@@ -1,6 +1,7 @@
 import os, pyspark
 os.environ['HADOOP_HOME'] = "C:\\winutils"
 sc = pyspark.SparkContext('local[*]')
+    
 
 import math
 import pickle
@@ -586,20 +587,22 @@ def author_metrics(author_name):
     return res
 
 # %% Main
-path = os.path.abspath(os.path.join('./tests'))
-filelist = os.listdir(path)
 
-authors = []
-for file in filelist:
-    author = file.split('___')[0]
-    if author not in authors:
-        authors.append(author)
+if __name__ == "__main__":    
+    path = os.path.abspath(os.path.join('./tests'))
+    filelist = os.listdir(path)
 
-t = timer()
-for author in authors:
+    authors = []
     for file in filelist:
-        if author in file:
-            save_metrics(path+'/'+file, author)
-print("TIME: \n{} minuti".format(round((timer() - t)/60, 4)))
+        author = file.split('___')[0]
+        if author not in authors:
+            authors.append(author)
 
-sc.stop()
+    t = timer()
+    for author in authors:
+        for file in filelist:
+            if author in file:
+                save_metrics(path+'/'+file, author)
+    print("TIME: \n{} minuti".format(round((timer() - t)/60, 4)))
+
+    sc.stop()
