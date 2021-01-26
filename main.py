@@ -6,8 +6,8 @@ import numpy as np
 # importiamo il modulo authoriship.py
 import authorship
 
-def create_metrics_file():
-    path = os.path.abspath(os.path.join('./tests'))
+def create_metrics_file(dir_generate_metrics):
+    path = os.path.abspath(os.path.join(dir_generate_metrics))
     filelist = os.listdir(path)
 
     authors = []
@@ -61,18 +61,33 @@ def search_tuple(_list, value):
 
 if __name__ == "__main__":
     import os
+    import sys
+    import getopt
+
+    dir_analize_files = './analize_files/'
+    dir_generate_metrics = './test/'
     
-    #create_metrics_file()
+    try:
+        optlist, args = optlist, args = getopt.getopt(sys.argv[1:], 'g:f:')    
+    except getopt.GetoptError:
+        print('main.py -g <dir_for_generating_metrics> -d <dir_unknows_authors>')
+        sys.exit(-1)
     
+    for opt in optlist:
+        if "-g" == opt[0]:
+            create_metrics_file(opt[1])
+        if "-d" == opt[0]:
+            dir_analize_files = opt[1]
+                
     
     authors = []
     for author in os.listdir('./author_metrics'):
         authors.append(author)
     
     
-    for file in os.listdir('./analize_files'):
+    for file in os.listdir(dir_analize_files):
         print("\nGenero le metriche del testo", file)
-        test_metrics = authorship.generate_metrics('./analize_files/' + file)
+        test_metrics = authorship.generate_metrics(dir_analize_files + file)
         
         _max_response = 0
         _author_response = ""
