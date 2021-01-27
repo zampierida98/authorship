@@ -22,7 +22,7 @@ def create_metrics_file(dir_generate_metrics):
                 authorship.save_metrics(path + '/' + file, "./author_metrics/" + author)
     return None
 
-def verify_author(metrics_dict, author_name):
+def verify_author(test_metrics, author_name):
     score = 0
     total = 0
     
