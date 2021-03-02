@@ -399,14 +399,16 @@ def generate_metrics(file_in):
     
     res = {}
     
+    print("\n\nGenerazione delle metriche di", file_in)
+    
     # consideriamo il testo SENZA i segni di punteggiatura
-    print("Caricamento del file in memoria ...", end=" ")
+    print("Caricamento del file [SENZA SEGNI DI PUNTEGGIATURA] in memoria ...", end=" ")
     data = load_file_without_punctuations_marks(file_in)
     data.persist()
     print("caricamento completato")
 
     # calcoliamo le prime metriche
-    print("Calcolo delle prime metriche (NON TUTTE), attendere ...", end=" ")
+    print("Calcolo delle metriche (SENZA SEGNI DI PUNTEGGIATURA), attendere ...", end=" ")
     
     RDD_word_counter, vocabulary_size = word_counter(data)
     RDD_word_counter.persist()
@@ -430,13 +432,13 @@ def generate_metrics(file_in):
 
     
     # consideriamo il testo CON i segni di punteggiatura
-    print("Caricamento del file in memoria ...", end=" ")
+    print("Caricamento del file [CON SEGNI DI PUNTEGGIATURA] in memoria ...", end=" ")
     sentences_data = load_file_without_number(file_in)
     sentences_data.persist()
     print("caricamento completato")
     
     # calcoliamo altre metriche
-    print("Calcolo di ulteriori metriche, attendere ...", end=" ")
+    print("Calcolo delle metriche (CON SEGNI DI PUNTEGGIATURA) , attendere ...", end=" ")
     
     RDD_sen_lengths = sentence_lengths(sentences_data)
     RDD_sen_lengths.persist()
@@ -449,7 +451,7 @@ def generate_metrics(file_in):
 
     dist_consec_comma = distance_consec_appear(sentences_data, ',')
     
-    print("calcolo completato")
+    print("Calcolo completato")
     
     
     # popoliamo il dizionario
@@ -491,6 +493,7 @@ def generate_metrics(file_in):
     res['min_dist_consec_the'] = min(dist_consec_the)
     res['max_dist_consec_the'] = max(dist_consec_the)
     
+    print("Generazione completata con successo\n\n")
     return res
     
 def save_metrics(file_in, file_out):
@@ -557,11 +560,11 @@ def author_metrics(author_name):
         dizionario con media e deviazione standard degli attributi
     '''
     
-    analisi = load_metrics(author_name)
+    diz_list = load_metrics(author_name)
     res = {}
     
     # recupero gli attributi dai dizionari e li metto sotto la stessa chiave
-    for diz in analisi:
+    for diz in diz_list:
         for key in diz:
             try:
                 res[key] += [diz[key]]

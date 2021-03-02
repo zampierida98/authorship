@@ -176,7 +176,7 @@ if __name__ == "__main__":
     # in caso in cui ci siano dei parametri DIVERSI da quelli opzionali
     # da errore
     except getopt.GetoptError:
-        print('main.py -g <dir_for_generating_metrics> -d <dir_unknown_authors>')
+        print('Uso\nmain.py -g <dir_for_generating_metrics> -d <dir_unknown_authors>')
         sys.exit(-1)
     
     # per ogni parametro riconosciuto richiamiamo le funzioni applicate alla
@@ -197,9 +197,7 @@ if __name__ == "__main__":
         authors.append(author)
     
     # per ogni file da analizzare
-    for file in os.listdir(dir_analize_files):
-        print("\nGenero le metriche del testo", file)
-        
+    for file in os.listdir(dir_analize_files):        
         # genero le metriche del file sconosciuto
         test_metrics = authorship.generate_metrics(dir_analize_files + file)
         
@@ -209,18 +207,26 @@ if __name__ == "__main__":
         
         # per ogni autore calcolo lo score e mantengo informazione
         # solo dello score migliore e del corrispondente autore
+        
+        print("\n\nInizio processo di classificazione del libro", file)
         for author in authors:
-            print("Verifico se il testo può appartenere a", author)
+            print("Sto calcolando rispetto all'auture:", author, "...", end=" ")
             percent_res = verify_author(test_metrics, author)
+            
+            # teniamo 3 cifre dopo la virgola
+            percent_res = round(percent_res, 3)
             
             if _max_response < percent_res:
                 _max_response = percent_res
                 _author_response = author
             
-            print(author, " con percentuale pari a", percent_res)
+            print("score:", percent_res, "%")
             
+        print("Fine processo di classificazione")
+        print("\nRisultato finale")
         # stampiamo a video l'informazione del possibile autore
-        print("\nIl libro", file, "riteniamo sia dell'autore", _author_response, "al", _max_response ,"%")
-    
+        print("Il libro", file, "riteniamo sia dell'autore", _author_response, "con", _max_response ,"%")
+        
+        print("\n" + "#" * 75)
     
     authorship.sc.stop()
