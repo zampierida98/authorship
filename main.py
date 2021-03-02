@@ -42,7 +42,7 @@ def create_metrics_file(dir_generate_metrics):
                 authorship.save_metrics(path + '/' + file, "./author_metrics/" + author)
     return None
 
-<<<<<<< HEAD
+
 def verify_author(metrics_dict, author_name):
     '''
     verify_author è la funzione che determina un punteggio, 
@@ -66,11 +66,11 @@ def verify_author(metrics_dict, author_name):
 
     '''
     
+    
+def verify_author(test_metrics, author_name):
+    
     # inizializziamo score e total
     # score <= total (per ogni singolo momento)
-=======
-def verify_author(test_metrics, author_name):
->>>>>>> 60a9edea0de846494fc9df3df2a06cd9e42ec675
     score = 0
     total = 0
     
@@ -79,16 +79,16 @@ def verify_author(test_metrics, author_name):
     author_metrics_var = authorship.author_metrics("./author_metrics/" + author_name)
     
     # per ogni singola metrica del libro SCONOSCIUTO
-    for key in metrics_dict:
+    for key in test_metrics:
         # se il tipo della metrica non è lista
-        if type(metrics_dict[key]) != list:
+        if type(test_metrics[key]) != list:
             # calcoliamo con gaussian un punteggio fra 0 e 1 da sommare a score
-            score += gaussian(metrics_dict[key], author_metrics_var[key][0], author_metrics_var[key][1])
+            score += gaussian(test_metrics[key], author_metrics_var[key][0], author_metrics_var[key][1])
             
             total += 1
         else:
             # abbiamo una lista di coppie tipo ("the", 100)
-            for tup in metrics_dict[key]:
+            for tup in test_metrics[key]:
                 # res_search = None se non ci c'è il primo valore della metrica
                 # res_search = (key,value) se key è presente dentro author_metrics_var[key]
                 res_search = search_tuple(author_metrics_var[key], tup[0])
