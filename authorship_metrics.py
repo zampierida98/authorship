@@ -184,7 +184,7 @@ def load_file_without_number(filepath):
     
     return (raw_text.filter(bool)                    # rimuoviamo le stringhe vuote
         .map(remove_number_some_punctuation_marks)
-        .map(lambda x : ' '.join(x.split()))        # rimuoviamo diversi spazi bianchi con uno
+        .map(lambda x : ' '.join(x.split()))         # rimuoviamo diversi spazi bianchi con uno
         .map(lambda row : row.split(" "))
        )
 

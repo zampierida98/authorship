@@ -407,7 +407,7 @@ def generate_metrics(file_in):
     print("caricamento completato")
 
     # calcoliamo le prime metriche
-    print("Calcolo delle prime metriche, attendere ...", end=" ")
+    print("Calcolo delle prime metriche (NON TUTTE), attendere ...", end=" ")
     
     RDD_word_counter, vocabulary_size = word_counter(data)
     RDD_word_counter.persist()
