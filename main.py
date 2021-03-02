@@ -42,6 +42,7 @@ def create_metrics_file(dir_generate_metrics):
                 authorship.save_metrics(path + '/' + file, "./author_metrics/" + author)
     return None
 
+<<<<<<< HEAD
 def verify_author(metrics_dict, author_name):
     '''
     verify_author è la funzione che determina un punteggio, 
@@ -67,6 +68,9 @@ def verify_author(metrics_dict, author_name):
     
     # inizializziamo score e total
     # score <= total (per ogni singolo momento)
+=======
+def verify_author(test_metrics, author_name):
+>>>>>>> 60a9edea0de846494fc9df3df2a06cd9e42ec675
     score = 0
     total = 0
     
