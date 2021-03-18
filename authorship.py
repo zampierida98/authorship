@@ -193,13 +193,14 @@ def prob_of_The(RDD_prob_distr_of_MCWs):
     
     Returns
     -------
-    RDD
-        RDD che contiene la probabilità della parola "the"
+    tuple
+        "the" e relativa probabilità
     '''
     
     return (RDD_prob_distr_of_MCWs
             .filter(lambda x: x[0] == "the")
-           )
+            .take(1)
+           )[0]
 
 def prob_of_comma(RDD_sentences_data, text_len):
     '''
@@ -369,12 +370,6 @@ def load_file_without_number(filepath):
         .map(lambda row : row.split(" "))
        )
 
-def getCollection(RDD):
-    return RDD.collect()
-
-def getValue(RDD):
-    return RDD.collect()[0]
-
 def mean_std_couple(_list, tot_el):
     for i in range(0, tot_el - len(_list)):
         _list.append(0)
@@ -466,14 +461,14 @@ def generate_metrics(file_in):
     res['avg_sentence_len'] = sum(sen_lengths)/len(sen_lengths)
     res['max_sentence_len'] = max(sen_lengths)
     res['min_sentence_len'] = min(sen_lengths)
-    res['prob_distr_freq_sen'] = getCollection(prob_distr_freq_sen)
-    res['prob_most_freq_sen'] = getValue(prob_distr_freq_sen)[1]
+    res['prob_distr_freq_sen'] = prob_distr_freq_sen.collect()
+    res['prob_most_freq_sen'] = prob_distr_freq_sen.collect()[0][1]
     
     # attributi sulla probabilità delle parole
     res['prob_distr_of_30'] = RDD_prob_distr_of_MCWs.take(30)
     res['prob_of_the_most_common_word'] = prob_the_most_common_word[1]
     res['prob_of_the_most_common_word_x'] = prob_the_most_common_word_x[1]
-    res['prob_of_the'] = getValue(prob_the)[1]
+    res['prob_of_the'] = prob_the[1]
     res['prob_of_comma'] = p_comma
     
     # attributi sulla distanza
