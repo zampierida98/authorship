@@ -99,7 +99,7 @@ def sentence_lengths(RDD):
 
 def prob_distr_of_sentence_length(RDD_sen_len):
     '''
-    Ritorna una lista che contiene la distribuzione di probabilità delle lunghezze delle frasi.
+    Ritorna la distribuzione di probabilità delle lunghezze delle frasi.
     
     Parameters
     ----------
@@ -108,8 +108,8 @@ def prob_distr_of_sentence_length(RDD_sen_len):
 
     Returns
     -------
-    list
-        distribuzione di probabilità delle lunghezze delle frasi
+    RDD
+        RDD che contiene la distribuzione di probabilità
     '''
     
     tot = RDD_sen_len.count()
