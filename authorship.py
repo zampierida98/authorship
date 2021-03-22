@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 import os, sys, pyspark
@@ -439,7 +438,7 @@ def generate_metrics(file_in):
 
     dist_consec_comma = distance_consec_appear(sentences_data, ',')
     
-    print("Calcolo completato")
+    print("calcolo completato")
     
     
     # popoliamo il dizionario
@@ -509,8 +508,9 @@ def save_metrics(file_in, file_out):
 
 # %% Main
 if __name__ == "__main__":
-    os.environ['HADOOP_HOME'] = "C:\\winutils"
+    #os.environ['HADOOP_HOME'] = "C:\\winutils"
     sc = pyspark.SparkContext('local[*]')
+    sc.setLogLevel("ERROR")
     
     path = os.path.abspath(os.path.join(sys.argv[2]))
     

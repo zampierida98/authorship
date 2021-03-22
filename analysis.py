@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 import os, sys, pyspark
@@ -191,8 +190,9 @@ def author_metrics(author_name):
 
 # Main
 if __name__ == "__main__":
-    os.environ['HADOOP_HOME'] = "C:\\winutils"
+    #os.environ['HADOOP_HOME'] = "C:\\winutils"
     sc = pyspark.SparkContext('local[*]')
+    sc.setLogLevel("ERROR")
     
     # aggiungiamo gli autori che noi conosciamo
     authors = []
