@@ -1,24 +1,24 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import os, sys
-from colorama import init
-from termcolor import colored
-init()
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print(colored("Usage: authorship.py [-t path | -f file]", 'red'))
+        print("Usage: main.py [-t path | -f file]")
     else:
         if sys.argv[1] == '-t':
-            print(colored("MODULO SALVATAGGIO\n\n", 'green'))
+            print("MODULO SALVATAGGIO\n\n")
             os.system('python authorship.py '+sys.argv[1]+' '+sys.argv[2])
-            print(colored("FINE SALVATAGGIO", 'green'))
+            print("FINE SALVATAGGIO")
         if sys.argv[1] == '-f':
-            print(colored("MODULO SALVATAGGIO\n\n", 'green'))
+            print("MODULO SALVATAGGIO\n\n")
             os.system('python authorship.py '+sys.argv[1]+' '+sys.argv[2])
-            print(colored("FINE SALVATAGGIO", 'green'))
+            print("FINE SALVATAGGIO")
             
-            print(colored("MODULO ANALISI\n\n", 'green'))
+            print(("MODULO ANALISI\n\n")
             unknown_file = sys.argv[2].split('.')[0]
             os.system('python analysis.py '+unknown_file)
-            print(colored("FINE ANALISI", 'green'))
+            print("FINE ANALISI")
         else:
-            print("Usage: authorship.py [-t path | -f file]")
+            print("Usage: main.py [-t path | -f file]")
