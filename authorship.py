@@ -1,10 +1,6 @@
-import os, pyspark
-os.environ['HADOOP_HOME'] = "C:\\winutils"
-sc = pyspark.SparkContext('local[*]')
-
+import os, sys, pyspark
 import math
 import pickle
-import statistics
 from timeit import default_timer as timer
 
 # %% Attributi sull'intero testo
@@ -370,12 +366,6 @@ def load_file_without_number(filepath):
         .map(lambda row : row.split(" "))
        )
 
-def mean_std_couple(_list, tot_el):
-    for i in range(0, tot_el - len(_list)):
-        _list.append(0)
-
-    return (statistics.mean(_list), statistics.stdev(_list))
-
 # %% Salvataggio degli attributi
 def generate_metrics(file_in):
     '''
@@ -433,7 +423,7 @@ def generate_metrics(file_in):
     print("caricamento completato")
     
     # calcoliamo altre metriche
-    print("Calcolo delle metriche (CON SEGNI DI PUNTEGGIATURA) , attendere ...", end=" ")
+    print("Calcolo delle metriche (CON SEGNI DI PUNTEGGIATURA), attendere ...", end=" ")
     
     RDD_sen_lengths = sentence_lengths(sentences_data)
     RDD_sen_lengths.persist()
@@ -514,91 +504,30 @@ def save_metrics(file_in, file_out):
     
     print("Salvataggio completato")
 
-def load_metrics(file_in):
-    '''
-    Carica i dizionari degli attributi presenti in un file.
-    
-    Parameters
-    ----------
-    file_in : str
-        path del file da cui caricare
-
-    Returns
-    -------
-    list
-        lista di dizionari degli attributi
-    '''
-
-    res = []
-    
-    with open(file_in, "rb") as fin:
-        while True:
-            try:
-                res.append(pickle.load(fin))
-            except EOFError:
-                break
-                
-    return res
-
-def author_metrics(author_name):
-    '''
-    Calcola media e deviazione standard degli attributi (provenienti da vari testi) di un autore.
-    
-    Parameters
-    ----------
-    author_name : str
-        nome del file contenente i dizionari degli attributi
-
-    Returns
-    -------
-    dict
-        dizionario con media e deviazione standard degli attributi
-    '''
-    
-    diz_list = load_metrics(author_name)
-    res = {}
-    
-    # recupero gli attributi dai dizionari e li metto sotto la stessa chiave
-    for diz in diz_list:
-        for key in diz:
-            try:
-                res[key] += [diz[key]]
-            except:
-                res[key] = [diz[key]]
-    
-    for key in res:
-        if type(res[key][0]) != list:
-            # se l'attributo NON è una lista, calcolo direttamente media e deviazione standard
-            res[key] = (statistics.mean(res[key]), statistics.stdev(res[key]))
-        else:
-            # se l'attributo è una lista, calcolo direttamente media e deviazione standard
-            tot_el = len(res[key])
-            res[key] = (sc.parallelize(res[key])
-                        .flatMap(lambda x: x)
-                        .map(lambda x: (x[0], [x[1]]))
-                        .reduceByKey(lambda a,b: a+b)
-                        .map(lambda x: (x[0], mean_std_couple(x[1], tot_el)))
-                        .collect()
-                       )
-    
-    return res
-
 # %% Main
-if __name__ == "__main__":    
-    path = os.path.abspath(os.path.join('./tests'))
-    filelist = os.listdir(path)
+if __name__ == "__main__":
+    os.environ['HADOOP_HOME'] = "C:\\winutils"
+    sc = pyspark.SparkContext('local[*]')
+    
+    path = os.path.abspath(os.path.join(sys.argv[2]))
+    
+    if sys.argv[1] == '-t':
+        filelist = os.listdir(path)
 
-    authors = []
-    for file in filelist:
-        author = file.split('___')[0]
-        if author not in authors:
-            authors.append(author)
-
-    t = timer()
-    for author in authors:
+        authors = []
         for file in filelist:
-            if author in file:
-                save_metrics(path+'/'+file, 'author_metrics/'+author)
-    print("TIME: \n{} minuti".format(round((timer() - t)/60, 4)))
+            author = file.split('___')[0] # attenzione: il nome dei file deve essere del tipo autore___testo.txt
+            if author not in authors:
+                authors.append(author)
+
+        t = timer()
+        for author in authors:
+            for file in filelist:
+                if author in file:
+                    save_metrics(path+'/'+file, 'author_metrics/'+author)
+        print("TIME: \n{} minuti".format(round((timer() - t)/60, 4)))
+    
+    elif sys.argv[1] == '-f': 
+        save_metrics(path, sys.argv[2].split('.')[0]) # elimino l'estensione .txt
 
     sc.stop()
