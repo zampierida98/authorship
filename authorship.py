@@ -173,7 +173,8 @@ def prob_of_the_most_common_word_x(RDD_prob_distr_of_MCWs):
         MCWx e relativa probabilità
     '''
     
-    prep_art = open("preposizioni_e_articoli.txt").read().splitlines()
+    prep_art_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'prep_art.txt')
+    prep_art = open(prep_art_file).read().splitlines()
     
     return (RDD_prob_distr_of_MCWs
             .filter(lambda x: x[0] not in prep_art)
@@ -512,7 +513,7 @@ if __name__ == "__main__":
     sc = pyspark.SparkContext('local[*]')
     sc.setLogLevel("ERROR")
     
-    path = os.path.abspath(os.path.join(sys.argv[2]))
+    path = sys.argv[2]
     
     if sys.argv[1] == '-t':
         filelist = os.listdir(path)
@@ -527,10 +528,11 @@ if __name__ == "__main__":
         for author in authors:
             for file in filelist:
                 if author in file:
-                    save_metrics(path+'/'+file, 'author_metrics/'+author)
+                    result_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics/'+author) # si salva di default in author_metrics
+                    save_metrics(path+'/'+file, result_path)
         print("TIME: \n{} minuti".format(round((timer() - t)/60, 4)))
     
     elif sys.argv[1] == '-f': 
-        save_metrics(path, sys.argv[2].split('.')[0]) # elimino l'estensione .txt
+        save_metrics(path, sys.argv[2].split('.')[0]) # salvo il risultato nella directory dove si trova il testo
 
     sc.stop()

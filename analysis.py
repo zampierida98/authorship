@@ -32,7 +32,8 @@ def verify_author(test_metrics, author_name):
     
     # calcoliamo la media e la deviazione standard delle metriche di ogni libro
     # di author_name
-    author_metrics_var = author_metrics("./author_metrics/" + author_name)
+    author_metrics_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics/')
+    author_metrics_var = author_metrics(author_metrics_dir + author_name)
     
     # per ogni singola metrica del libro SCONOSCIUTO
     for key in test_metrics:
@@ -195,8 +196,9 @@ if __name__ == "__main__":
     sc.setLogLevel("ERROR")
     
     # aggiungiamo gli autori che noi conosciamo
+    author_metrics_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics/')
     authors = []
-    for author in os.listdir('./author_metrics'):
+    for author in os.listdir(author_metrics_dir):
         authors.append(author)
 
     # genero le metriche del testo sconosciuto 

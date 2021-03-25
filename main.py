@@ -8,16 +8,21 @@ if __name__ == "__main__":
     else:
         if sys.argv[1] == '-t':
             print("MODULO SALVATAGGIO\n\n")
-            os.system('spark-submit authorship.py '+sys.argv[1]+' "'+sys.argv[2]+'"')
+            path_authorship = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'authorship.py') # path assoluto del file authorship.py
+            argument = os.path.abspath(sys.argv[2]) # path assoluto della directory passata come argomento
+            os.system('spark-submit "'+path_authorship+'" '+sys.argv[1]+' "'+argument+'"')
             print("FINE SALVATAGGIO")
         elif sys.argv[1] == '-f':
             print("MODULO SALVATAGGIO\n\n")
-            os.system('spark-submit authorship.py '+sys.argv[1]+' "'+sys.argv[2]+'"')
+            path_authorship = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'authorship.py') # path assoluto del file authorship.py
+            argument = os.path.abspath(sys.argv[2]) # path assoluto del file passato come argomento
+            os.system('spark-submit "'+path_authorship+'" '+sys.argv[1]+' "'+argument+'"')
             print("FINE SALVATAGGIO")
             
             print("MODULO ANALISI\n\n")
-            unknown_file = sys.argv[2].split('.')[0]
-            os.system('spark-submit analysis.py "'+unknown_file+'"')
+            path_analysis = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'analysis.py') # path assoluto del file analysis.py
+            unknown_file = os.path.abspath(sys.argv[2].split('.')[0]) # path assoluto del file salvato
+            os.system('spark-submit "'+path_analysis+'" "'+unknown_file+'"')
             print("FINE ANALISI")
             
             os.remove(unknown_file)
