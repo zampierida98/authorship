@@ -513,10 +513,10 @@ if __name__ == "__main__":
     sc = pyspark.SparkContext('local[*]')
     sc.setLogLevel("ERROR")
     
-    path = sys.argv[2]
+    argument_path = sys.argv[2]
     
     if sys.argv[1] == '-t':
-        filelist = os.listdir(path)
+        filelist = os.listdir(argument_path)
 
         authors = []
         for file in filelist:
@@ -529,10 +529,10 @@ if __name__ == "__main__":
             for file in filelist:
                 if author in file:
                     result_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics/'+author) # si salva di default in author_metrics
-                    save_metrics(path+'/'+file, result_path)
+                    save_metrics(argument_path+'/'+file, result_path)
         print("TIME: \n{} minuti".format(round((timer() - t)/60, 4)))
     
     elif sys.argv[1] == '-f': 
-        save_metrics(path, sys.argv[2].split('.')[0]) # salvo il risultato nella directory dove si trova il testo
+        save_metrics(argument_path, argument_path.split('.')[0]) # salvo il risultato nella directory dove si trova il testo
 
     sc.stop()

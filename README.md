@@ -8,7 +8,9 @@ Progetto per l'esame del corso di Big Data
 	* statistics
 	* math
 	* timeit
+
 Nota: la maggior parte di queste dovrebbe già essere presente nella libreria standard
+
 - Scaricare Apache Spark 3 (per Hadoop 2.7) dal seguente link: https://spark.apache.org/downloads.html
 - Estrarre in una directory il contenuto del file scaricato
 
