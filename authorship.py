@@ -536,7 +536,10 @@ if __name__ == "__main__":
                     save_metrics(argument_path+'/'+file, result_path)
         print("TIME: \n{} minuti".format(round((timer() - t)/60, 4)))
     
-    elif sys.argv[1] == '-f': 
-        save_metrics(argument_path, argument_path.split('.')[0]) # salvo il risultato nella directory dove si trova il testo
+    
+    elif sys.argv[1] == '-f':
+        for file in os.listdir(argument_path):
+            file = argument_path + "/" + file      # percorso assoluto dei file
+            save_metrics(file, file.split('.')[0]) # salvo il risultato nella directory dove si trova il testo
 
     sc.stop()
