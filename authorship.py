@@ -515,7 +515,11 @@ if __name__ == "__main__":
     
     argument_path = sys.argv[2]
     
-    if sys.argv[1] == '-t':
+    # print di separazione del warning
+    print("\n#"*150, end=" ")
+    print("Fine dei warning SPARK")
+    
+    if sys.argv[1] == '-a':
         filelist = os.listdir(argument_path)
 
         authors = []

@@ -195,39 +195,56 @@ if __name__ == "__main__":
     sc = pyspark.SparkContext('local[*]')
     sc.setLogLevel("ERROR")
     
+    # print di separazione del warning
+    print("\n#"*150, end=" ")
+    print("Fine dei warning SPARK")
+    
     # aggiungiamo gli autori che noi conosciamo
     author_metrics_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics/')
     authors = []
     for author in os.listdir(author_metrics_dir):
         authors.append(author)
 
-    # genero le metriche del testo sconosciuto 
-    test_metrics = load_metrics(sys.argv[1])[0]
-
-    # per ogni autore calcolo lo score e mantengo l'informazione solo dello score migliore e del corrispondente autore
-    _max_response = 0
-    _author_response = ""
+    dir_unknown_books = os.path.abspath(sys.argv[1])
     
-    print("\n\nInizio processo di classificazione del libro", sys.argv[1])
-    for author in authors:
-        print("Sto calcolando rispetto all'autore:", author, "...", end=" ")
-        percent_res = verify_author(test_metrics, author)
+    for filename in os.listdir(dir_unknown_books):
         
-        # teniamo 3 cifre dopo la virgola
-        percent_res = round(percent_res, 3)
+        # saltiamo i file con le estensioni
+        if "." in filename:
+            continue
         
-        if _max_response < percent_res:
-            _max_response = percent_res
-            _author_response = author
+        # path completo dei libri
+        file = dir_unknown_books + "/" + filename
         
-        print("score:", percent_res, "%")
+        # genero le metriche del testo sconosciuto 
+        # 1- file.split(".")[0] per recuperare le metriche
+        # 2- Il secondo [0] perchè ritorna una lista con almeno un dizionario
+        test_metrics = load_metrics(file.split(".")[0])[0]
+    
+        # per ogni autore calcolo lo score e mantengo l'informazione solo dello score migliore e del corrispondente autore
+        _max_response = 0
+        _author_response = ""
+        
+        print("\n\nInizio processo di classificazione del libro", filename)
+        for author in authors:
+            print("Sto calcolando rispetto all'autore:", author, "...", end=" ")
+            percent_res = verify_author(test_metrics, author)
+            
+            # teniamo 3 cifre dopo la virgola
+            percent_res = round(percent_res, 3)
+            
+            if _max_response < percent_res:
+                _max_response = percent_res
+                _author_response = author
+            
+            print("score:", percent_res, "%")
+
+        # stampiamo a video l'informazione del possibile autore
+        print("\nRisultato finale")
+        print("Il libro", filename, "riteniamo sia dell'autore", _author_response, "con", _max_response ,"%")
+        
+        print("\n" + "#" * 150)
         
     print("Fine processo di classificazione")
-    
-    # stampiamo a video l'informazione del possibile autore
-    print("\nRisultato finale")
-    print("Il libro", sys.argv[1], "riteniamo sia dell'autore", _author_response, "con", _max_response ,"%")
-    
-    print("\n" + "#" * 75)
     
     sc.stop()
