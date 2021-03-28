@@ -516,7 +516,7 @@ if __name__ == "__main__":
     argument_path = sys.argv[2]
     
     # print di separazione del warning
-    print("\n#"*150, end=" ")
+    print("\n","#"*150, end=" ")
     print("Fine dei warning SPARK")
     
     if sys.argv[1] == '-a':

@@ -196,7 +196,7 @@ if __name__ == "__main__":
     sc.setLogLevel("ERROR")
     
     # print di separazione del warning
-    print("\n#"*150, end=" ")
+    print("\n","#"*150, end=" ")
     print("Fine dei warning SPARK")
     
     # aggiungiamo gli autori che noi conosciamo
@@ -207,6 +207,52 @@ if __name__ == "__main__":
 
     dir_unknown_books = os.path.abspath(sys.argv[1])
     
+    
+    print("Parallelize")
+    # list_dict_unknown_books è una lista di coppie della forma:
+    # (nome_libro, dizionario_stilemi_libro)
+    
+    list_dict_unknown_books =   (sc.parallelize(os.listdir(dir_unknown_books))
+                                 .filter(lambda x: "." not in x)
+                                 .map(lambda x: (x, dir_unknown_books + "/" + x))
+                                 # genero le metriche del testo sconosciuto 
+                                 # 1- file.split(".")[0] per recuperare le metriche
+                                 # 2- Il secondo [0] perchè ritorna una lista con almeno un dizionario
+                                 .map(lambda x: (x[0], load_metrics(x[1].split(".")[0])[0]))
+                                 )
+    
+    print("Classificazione dei libri")
+    
+    books = (list_dict_unknown_books
+         # eseguiamo il prodotto cartesiano con ogni autore su cui fare l'analisi
+         # adesso abbiamo ((nome_libro, dizionario_stilemi_libro), autore)
+         .cartesian(sc.parallelize(authors))
+         
+         # con questo map otteniamo una tupla di tre elementi:
+         # (nome_libro, dizionario_stilemi_libro, autore)
+         .map(lambda x: (x[0][0], x[0][1], x[1]))
+         
+         # con questo map calcoliamo la probabiltà che il libro sia stato
+         # prodotto da un determinato autore. Otteniamo la seguente tupla:
+         # (nome_libro, dizionario_stilemi_libro, autore, probabilità)
+         .map(lambda x: (x[0], x[1], x[2], verify_author(x[1], x[2])))
+         
+         # realizziamo tuple della forma:
+         # (nome_libro, autore, probabilità)
+         .map(lambda x: (x[0], x[1], x[3]))
+         
+         # creiamo adesso coppie per fare il group by key
+         .map(lambda x: (x[0], x[1:]))
+         .groupByKey()
+         .mapValues(list)
+         
+         .collect()         
+         )
+
+    for b in books:
+        print(b)
+    
+    '''
     for filename in os.listdir(dir_unknown_books):
         
         # saltiamo i file con le estensioni
@@ -246,5 +292,5 @@ if __name__ == "__main__":
         print("\n" + "#" * 150)
         
     print("Fine processo di classificazione")
-    
+    '''
     sc.stop()

@@ -27,6 +27,7 @@ if __name__ == "__main__":
             
         if "-s" == opt[0]:
             
+            '''
             print("Processo di generazione delle metriche di libri sconosciuti")
             # print di separazione del warning
             print("#"*50, "Warning SPARK", end=" ")
@@ -36,9 +37,9 @@ if __name__ == "__main__":
             os.system('spark-submit "' + path_authorship + '" ' + "-f" + ' "' + os.path.abspath(opt[1]) +'"')
             
             print("Fine processo di generazione delle metriche di libri sconosciuti")                
-                
+            '''    
             
-            '''
+            
             dir_unknown_books = os.path.abspath(opt[1])
             
             print("Processo di analisi dei testi sconosciuti")
@@ -54,4 +55,4 @@ if __name__ == "__main__":
             # rimozione delle metriche
             #for file in os.listdir(dir_unknown_books):
             #    os.remove((dir_unknown_books + "/" + file).split('.')[0])
-            '''
+            
