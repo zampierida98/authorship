@@ -20,7 +20,7 @@ if __name__ == "__main__":
             
             path_authorship = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'authorship.py') # path assoluto del file authorship.py
             argument = os.path.abspath(opt[1]) # path assoluto della directory passata come argomento
-            os.system('spark-submit "' + path_authorship + '" ' + "-a"  + ' "' + argument + '"')
+            os.system('spark-submit "' + path_authorship + '" -a "' + argument + '"')
             
             print("Fine processo di creazione e salvataggio delle metriche di libri conosciuti")
             
@@ -32,7 +32,7 @@ if __name__ == "__main__":
             print("#" * os.get_terminal_size()[0] * 2)
             
             path_authorship = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'authorship.py') # path assoluto del file authorship.py
-            os.system('spark-submit "' + path_authorship + '" ' + "-f" + ' "' + os.path.abspath(opt[1]) +'"')
+            os.system('spark-submit "' + path_authorship + '" -s "' + os.path.abspath(opt[1]) +'"')
             
             print("Fine processo di generazione delle metriche di libri sconosciuti")                
             '''    

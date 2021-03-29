@@ -512,15 +512,14 @@ if __name__ == "__main__":
     #os.environ['HADOOP_HOME'] = "C:\\winutils"
     sc = pyspark.SparkContext('local[*]')
     sc.setLogLevel("ERROR")
-    
-    argument_path = sys.argv[2]
-    
+
     # print di separazione del warning
     print("#" * os.get_terminal_size()[0] * 2)
     
+    argument_path = sys.argv[2]
+    filelist = os.listdir(argument_path)
+    
     if sys.argv[1] == '-a':
-        filelist = os.listdir(argument_path)
-
         authors = []
         for file in filelist:
             author = file.split('___')[0] # attenzione: il nome dei file deve essere del tipo autore___testo.txt
@@ -531,14 +530,13 @@ if __name__ == "__main__":
         for author in authors:
             for file in filelist:
                 if author in file:
-                    result_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics/'+author) # si salva di default in author_metrics
-                    save_metrics(argument_path+'/'+file, result_path)
+                    result_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics', author) # si salva di default in author_metrics
+                    save_metrics(os.path.join(argument_path, file), result_path)
         print("TIME: \n{} minuti".format(round((timer() - t)/60, 4)))
     
-    
-    elif sys.argv[1] == '-f':
-        for file in os.listdir(argument_path):
-            file = argument_path + "/" + file      # percorso assoluto dei file
+    elif sys.argv[1] == '-s':
+        for file in filelist:
+            file = os.path.join(argument_path, file) # percorso assoluto dei file
             save_metrics(file, file.split('.')[0]) # salvo il risultato nella directory dove si trova il testo
 
     sc.stop()
