@@ -16,8 +16,7 @@ if __name__ == "__main__":
         if "-a" == opt[0]:
             print("Processo di creazione e salvataggio delle metriche di libri conosciuti")
             # print di separazione del warning
-            print("#"*50, "Warning SPARK", end=" ")
-            print("#"*350)
+            print("#" * os.get_terminal_size()[0] * 2)
             
             path_authorship = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'authorship.py') # path assoluto del file authorship.py
             argument = os.path.abspath(opt[1]) # path assoluto della directory passata come argomento
@@ -30,8 +29,7 @@ if __name__ == "__main__":
             '''
             print("Processo di generazione delle metriche di libri sconosciuti")
             # print di separazione del warning
-            print("#"*50, "Warning SPARK", end=" ")
-            print("#"*350)
+            print("#" * os.get_terminal_size()[0] * 2)
             
             path_authorship = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'authorship.py') # path assoluto del file authorship.py
             os.system('spark-submit "' + path_authorship + '" ' + "-f" + ' "' + os.path.abspath(opt[1]) +'"')
@@ -44,8 +42,7 @@ if __name__ == "__main__":
             
             print("Processo di analisi dei testi sconosciuti")
             # print di separazione del warning
-            print("#"*50, "Warning SPARK", end=" ")
-            print("#"*350)
+            print("#" * os.get_terminal_size()[0] * 2)
             
             path_analysis = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'analysis.py') # path assoluto del file analysis.py
             os.system('spark-submit "' + path_analysis + '" "' + dir_unknown_books + '"')

@@ -5,7 +5,7 @@ import pickle
 import statistics
 import numpy as np
 
-def verify_author(test_metrics, author_name):
+def verify_author(test_metrics, author_metrics_var):
     '''
     verify_author è la funzione che determina un punteggio, 
     a partire dalle metriche di un libro SCONOSCIUTO, calcolando la distanza
@@ -16,8 +16,8 @@ def verify_author(test_metrics, author_name):
     ----------
     metrics_dict : dict
         dizionario delle metriche del libro SCONOSCIUTO
-    author_name : string
-        nome dell'autore
+    author_metrics_var : dict
+        dizionario delle medie e dev standard per ogni attributo
 
     Returns
     -------
@@ -31,9 +31,7 @@ def verify_author(test_metrics, author_name):
     total = 0
     
     # calcoliamo la media e la deviazione standard delle metriche di ogni libro
-    # di author_name
-    author_metrics_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics/')
-    author_metrics_var = author_metrics(author_metrics_dir + author_name)
+    # di author_metrics_var 
     
     # per ogni singola metrica del libro SCONOSCIUTO
     for key in test_metrics:
@@ -196,19 +194,21 @@ if __name__ == "__main__":
     sc.setLogLevel("ERROR")
     
     # print di separazione del warning
-    print("\n","#"*150, end=" ")
-    print("Fine dei warning SPARK")
+    print("#" * os.get_terminal_size()[0] * 2)
     
-    # aggiungiamo gli autori che noi conosciamo
+    # authors è una lista di coppie della forma:
+    # (nome_autore, dizionario_media_std_stilemi)
+    dir_unknown_books = os.path.abspath(sys.argv[1])    
     author_metrics_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics/')
+    
+    print("\nGenerazione per ogni autore delle medie e deviazioni standard...", end=" ")
     authors = []
     for author in os.listdir(author_metrics_dir):
-        authors.append(author)
-
-    dir_unknown_books = os.path.abspath(sys.argv[1])
+        authors.append((author, author_metrics(author_metrics_dir + author)))
     
+    print("completato")
     
-    print("Parallelize")
+    print("Caricamento dei libri nella struttura dati...",end=" ")
     # list_dict_unknown_books è una lista di coppie della forma:
     # (nome_libro, dizionario_stilemi_libro)
     
@@ -220,37 +220,52 @@ if __name__ == "__main__":
                                  # 2- Il secondo [0] perchè ritorna una lista con almeno un dizionario
                                  .map(lambda x: (x[0], load_metrics(x[1].split(".")[0])[0]))
                                  )
+    print("completato")
     
-    print("Classificazione dei libri")
+    print("Inizio processo di classificazione dei libri...", end=" ")
     
-    books = (list_dict_unknown_books
+    books_classification = (list_dict_unknown_books
          # eseguiamo il prodotto cartesiano con ogni autore su cui fare l'analisi
          # adesso abbiamo ((nome_libro, dizionario_stilemi_libro), autore)
          .cartesian(sc.parallelize(authors))
          
          # con questo map otteniamo una tupla di tre elementi:
-         # (nome_libro, dizionario_stilemi_libro, autore)
-         .map(lambda x: (x[0][0], x[0][1], x[1]))
+         # (nome_libro, dizionario_stilemi_libro, nome_autore, dizionario_media_std_stilemi)
+         .map(lambda x: (x[0][0], x[0][1], x[1][0], x[1][1]))
          
          # con questo map calcoliamo la probabiltà che il libro sia stato
          # prodotto da un determinato autore. Otteniamo la seguente tupla:
-         # (nome_libro, dizionario_stilemi_libro, autore, probabilità)
-         .map(lambda x: (x[0], x[1], x[2], verify_author(x[1], x[2])))
-         
-         # realizziamo tuple della forma:
          # (nome_libro, autore, probabilità)
-         .map(lambda x: (x[0], x[1], x[3]))
+         .map(lambda x: (x[0], x[2], round(verify_author(x[1], x[3]), 3)))
          
          # creiamo adesso coppie per fare il group by key
          .map(lambda x: (x[0], x[1:]))
          .groupByKey()
          .mapValues(list)
          
-         .collect()         
+         .collect()
          )
+    
+    print("completato")
 
-    for b in books:
-        print(b)
+    for book_class in books_classification:
+        _max_response = 0
+        _author_response = ""
+        print("\nRisultati analisi del libro", book_class[0])
+        
+        for resp in book_class[1]:
+            if _max_response < resp[1]:
+                _max_response = resp[1]
+                _author_response = resp[0]
+            print("Autore:", resp[0], ",", "score:", resp[1], "%")
+        
+        # stampiamo a video l'informazione del possibile autore
+        print("\nRisultato finale")
+        print("Il libro", book_class[0], "riteniamo sia dell'autore", _author_response, "con", _max_response ,"%")
+        
+        print("\n" + "#" * os.get_terminal_size()[0])
+    
+    print("Fine processo di classificazione")
     
     '''
     for filename in os.listdir(dir_unknown_books):
