@@ -513,8 +513,9 @@ if __name__ == "__main__":
     sc = pyspark.SparkContext('local[*]')
     sc.setLogLevel("ERROR")
 
+    import shutil
     # print di separazione del warning
-    print("#" * os.get_terminal_size()[0] * 2)
+    print("#" * shutil.get_terminal_size()[0] * 2)
     
     argument_path = sys.argv[2]
     filelist = os.listdir(argument_path)

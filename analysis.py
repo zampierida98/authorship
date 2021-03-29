@@ -193,8 +193,9 @@ if __name__ == "__main__":
     sc = pyspark.SparkContext('local[*]')
     sc.setLogLevel("ERROR")
     
+    import shutil
     # print di separazione del warning
-    print("#" * os.get_terminal_size()[0] * 2)
+    print("#" * shutil.get_terminal_size()[0] * 2)
     
     # authors è una lista di coppie della forma:
     # (nome_autore, dizionario_media_std_stilemi)
