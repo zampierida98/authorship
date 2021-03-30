@@ -48,6 +48,8 @@ if __name__ == "__main__":
 
             # rimozione dei file delle metriche
             for file in os.listdir(dir_unknown_books):
-                file_path = os.path.join(dir_unknown_books, file) # percorso assoluto dei file temporanei
-                os.remove(file_path.split('.')[0])
+                if '.' in file:
+                    continue
+                
+                os.remove(os.path.join(dir_unknown_books, file))
             
