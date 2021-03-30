@@ -3,6 +3,7 @@
 import os, sys, pyspark
 import math
 import pickle
+import shutil
 from timeit import default_timer as timer
 
 # %% Attributi sull'intero testo
@@ -513,8 +514,7 @@ if __name__ == "__main__":
     sc = pyspark.SparkContext('local[*]')
     sc.setLogLevel("ERROR")
 
-    import shutil
-    # print di separazione del warning
+    # print di separazione dei warning
     print("#" * shutil.get_terminal_size()[0] * 2)
     
     argument_path = sys.argv[2]

@@ -2,6 +2,7 @@
 
 import os, sys
 import getopt
+import shutil
 
 if __name__ == "__main__":
     
@@ -15,8 +16,8 @@ if __name__ == "__main__":
     for opt in optlist:
         if "-a" == opt[0]:
             print("Processo di creazione e salvataggio delle metriche di libri conosciuti")
-            # print di separazione del warning
-            print("#" * os.get_terminal_size()[0] * 2)
+            # print di separazione dei warning
+            print("#" * shutil.get_terminal_size()[0] * 2)
             
             path_authorship = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'authorship.py') # path assoluto del file authorship.py
             argument = os.path.abspath(opt[1]) # path assoluto della directory passata come argomento
@@ -25,31 +26,28 @@ if __name__ == "__main__":
             print("Fine processo di creazione e salvataggio delle metriche di libri conosciuti")
             
         if "-s" == opt[0]:
-            
-            '''
-            print("Processo di generazione delle metriche di libri sconosciuti")
-            # print di separazione del warning
-            print("#" * os.get_terminal_size()[0] * 2)
-            
-            path_authorship = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'authorship.py') # path assoluto del file authorship.py
-            os.system('spark-submit "' + path_authorship + '" -s "' + os.path.abspath(opt[1]) +'"')
-            
-            print("Fine processo di generazione delle metriche di libri sconosciuti")                
-            '''    
-            
-            
             dir_unknown_books = os.path.abspath(opt[1])
             
+            print("Processo di generazione delle metriche di libri sconosciuti")
+            # print di separazione dei warning
+            print("#" * shutil.get_terminal_size()[0] * 2)
+            
+            path_authorship = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'authorship.py') # path assoluto del file authorship.py
+            os.system('spark-submit "' + path_authorship + '" -s "' + dir_unknown_books +'"')
+            
+            print("Fine processo di generazione delle metriche di libri sconosciuti")                
+
             print("Processo di analisi dei testi sconosciuti")
-            # print di separazione del warning
-            print("#" * os.get_terminal_size()[0] * 2)
+            # print di separazione dei warning
+            print("#" * shutil.get_terminal_size()[0] * 2)
             
             path_analysis = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'analysis.py') # path assoluto del file analysis.py
             os.system('spark-submit "' + path_analysis + '" "' + dir_unknown_books + '"')
 
             print("Fine processo di analisi dei testi sconosciuti")
 
-            # rimozione delle metriche
-            #for file in os.listdir(dir_unknown_books):
-            #    os.remove((dir_unknown_books + "/" + file).split('.')[0])
+            # rimozione dei file delle metriche
+            for file in os.listdir(dir_unknown_books):
+                file_path = os.path.join(dir_unknown_books, file) # percorso assoluto dei file temporanei
+                os.remove(file_path.split('.')[0])
             

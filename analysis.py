@@ -2,6 +2,7 @@
 
 import os, sys, pyspark
 import pickle
+import shutil
 import statistics
 import numpy as np
 
@@ -193,8 +194,7 @@ if __name__ == "__main__":
     sc = pyspark.SparkContext('local[*]')
     sc.setLogLevel("ERROR")
     
-    import shutil
-    # print di separazione del warning
+    # print di separazione dei warning
     print("#" * shutil.get_terminal_size()[0] * 2)
     
     # authors è una lista di coppie della forma:
@@ -264,49 +264,8 @@ if __name__ == "__main__":
         print("\nRisultato finale")
         print("Il libro", book_class[0], "riteniamo sia dell'autore", _author_response, "con", _max_response ,"%")
         
-        print("\n" + "#" * os.get_terminal_size()[0])
+        print("\n" + "#" * shutil.get_terminal_size()[0])
     
     print("Fine processo di classificazione")
-    
-    '''
-    for filename in os.listdir(dir_unknown_books):
-        
-        # saltiamo i file con le estensioni
-        if "." in filename:
-            continue
-        
-        # path completo dei libri
-        file = dir_unknown_books + "/" + filename
-        
-        # genero le metriche del testo sconosciuto 
-        # 1- file.split(".")[0] per recuperare le metriche
-        # 2- Il secondo [0] perchè ritorna una lista con almeno un dizionario
-        test_metrics = load_metrics(file.split(".")[0])[0]
-    
-        # per ogni autore calcolo lo score e mantengo l'informazione solo dello score migliore e del corrispondente autore
-        _max_response = 0
-        _author_response = ""
-        
-        print("\n\nInizio processo di classificazione del libro", filename)
-        for author in authors:
-            print("Sto calcolando rispetto all'autore:", author, "...", end=" ")
-            percent_res = verify_author(test_metrics, author)
-            
-            # teniamo 3 cifre dopo la virgola
-            percent_res = round(percent_res, 3)
-            
-            if _max_response < percent_res:
-                _max_response = percent_res
-                _author_response = author
-            
-            print("score:", percent_res, "%")
 
-        # stampiamo a video l'informazione del possibile autore
-        print("\nRisultato finale")
-        print("Il libro", filename, "riteniamo sia dell'autore", _author_response, "con", _max_response ,"%")
-        
-        print("\n" + "#" * 150)
-        
-    print("Fine processo di classificazione")
-    '''
     sc.stop()
