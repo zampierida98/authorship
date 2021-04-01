@@ -15,22 +15,22 @@ Nota: la maggior parte di queste dovrebbe già essere presente nella libreria st
 - Estrarre in una directory il contenuto del file scaricato
 
 ## Esecuzione su Windows
-- Aggiungere la directory in cui si è installato Spark alla variabile d'ambiente `PATH`:
+- Aggiungere la directory in cui si è installato Spark alla variabile d'ambiente `PATH` (sostituire `x` a seconda della versione scaricata):
 ```
 set PATH=%PATH%;<spark_installation_path>\spark-3.x.x-bin-hadoop2.7\bin
 ```
-- Eseguire il file `main.py` tramite l'interprete Python, ad esempio:
+- Eseguire il file `main.py` tramite l'interprete Python, ad esempio per analizzare i testi in una directory:
 ```
-python main.py -f analyze_files/unknown___1.txt
+python main.py -s analyze_files
 ```
 
 ## Esecuzione su Linux
-- Aggiungere la directory in cui si è installato Spark alla variabile d'ambiente `PATH`:
+- Aggiungere la directory in cui si è installato Spark alla variabile d'ambiente `PATH` (sostituire `x` a seconda della versione scaricata):
 ```
 export PATH=$PATH:<spark_installation_path>/spark-3.x.x-bin-hadoop2.7/bin
 ```
-- Eseguire il file `main.py` tramite l'interprete Python, ad esempio:
+- Eseguire il file `main.py` tramite l'interprete Python, ad esempio per analizzare i testi in una directory:
 ```
-python main.py -f analyze_files/unknown___1.txt
+python main.py -s analyze_files
 ```
 Nota: prestare attenzione alla versione di Python chiamata in quanto è necessario chiamare la versione 3 (ad esempio: `python3.8`)
