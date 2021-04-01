@@ -217,9 +217,8 @@ if __name__ == "__main__":
                                  .filter(lambda x: "." not in x)
                                  .map(lambda x: (x, dir_unknown_books + "/" + x))
                                  # genero le metriche del testo sconosciuto 
-                                 # 1- file.split(".")[0] per recuperare le metriche
-                                 # 2- Il secondo [0] perchè ritorna una lista con almeno un dizionario
-                                 .map(lambda x: (x[0], load_metrics(x[1].split(".")[0])[0]))
+                                 # [0] perchè ritorna una lista con almeno un dizionario
+                                 .map(lambda x: (x[0], load_metrics(x[1])[0]))
                                  )
     print("completato")
     
