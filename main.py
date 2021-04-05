@@ -7,7 +7,7 @@ import shutil
 if __name__ == "__main__":
     
     try:
-        optlist, args = optlist, args = getopt.getopt(sys.argv[1:], "a:s:")
+        optlist, args = getopt.getopt(sys.argv[1:], "a:s:")
     
     except getopt.GetoptError:
         print('Uso: main.py -a <cartella_libri_da_analizzare> -s <cartella_libri_sconosciuti>')

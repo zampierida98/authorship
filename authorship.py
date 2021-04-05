@@ -538,6 +538,6 @@ if __name__ == "__main__":
     elif sys.argv[1] == '-s':
         for file in filelist:
             file = os.path.join(argument_path, file) # percorso assoluto dei file
-            save_metrics(file, file.split('.')[0]) # salvo il risultato nella directory dove si trova il testo
+            save_metrics(file, file[:-4]) # salvo il risultato nella directory dove si trova il testo (il file ha lo stesso nome senza l'estensione finale)
 
     sc.stop()
