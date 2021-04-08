@@ -12,6 +12,10 @@ if __name__ == "__main__":
     except getopt.GetoptError:
         print('Uso: main.py -a <cartella_libri_da_analizzare> -s <cartella_libri_sconosciuti>')
         sys.exit(-1)
+        
+    if len(optlist) < 1:
+        print('Uso: main.py -a <cartella_libri_da_analizzare> -s <cartella_libri_sconosciuti>')
+        sys.exit(-1)
 
     for opt in optlist:
         if "-a" == opt[0]:
