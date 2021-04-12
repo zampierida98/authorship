@@ -57,7 +57,8 @@ sudo yum install -y python34-setuptools
 ```
 - Installare ed aggiornare `pip`:
 ```
-curl https://bootstrap.pypa.io/pip/3.4/get-pip.py -o get-pip.py
+sudo yum install -y wget
+wget https://bootstrap.pypa.io/pip/3.4/get-pip.py -O get-pip.py
 python3.4 get-pip.py
 pip install --upgrade pip
 ```
