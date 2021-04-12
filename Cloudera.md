@@ -34,7 +34,7 @@ service docker stop
 
 ## Manager di pacchetti
 Innanzitutto bisogna controllare che il manager di pacchetti `yum` funzioni correttamente lanciando il comando `yum update`. Se vengono restituiti degli errori effettuare la seguente procedura:
-- Scaricare i file `CentOS-Base.repo`, `cloudera-cdh5.repo` e `cloudera-manager.repo`.
+- Scaricare i file `CentOS-Base.repo`, `cloudera-cdh5.repo` e `cloudera-manager.repo` dalla directory `File Cloudera` di questo repository.
 - Rimuovere i corrispondenti file su Cloudera:
 ```
 sudo rm /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/cloudera-cdh5.repo /etc/yum.repos.d/cloudera-manager.repo
