@@ -12,14 +12,16 @@ Progetto per l'esame del corso di Big Data
 - `main_hadoop.py`: modulo principale da richiamare in caso di esecuzione su Cloudera
 
 ## Installazione
+- Controllare che Java Runtime Environment e Python siano installati.
 - Controllare che le seguenti librerie Python siano installate:
 	* numpy
+	* psutil
 	* pickle
 	* statistics
 	* math
 	* timeit
 
-Nota: la maggior parte di queste dovrebbe già essere presente nella libreria standard
+Nota: la maggior parte di queste dovrebbe già essere presente nella libreria Python standard
 
 - Scaricare Apache Spark 3 (per Hadoop 2.7) dal seguente link: https://spark.apache.org/downloads.html
 - Estrarre in una directory il contenuto del file scaricato
