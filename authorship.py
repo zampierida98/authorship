@@ -4,7 +4,6 @@ import os, sys, pyspark
 import math
 import pickle
 import shutil
-from timeit import default_timer as timer
 
 # %% Attributi sull'intero testo
 def word_counter(RDD):
@@ -507,6 +506,45 @@ def save_metrics(file_in, file_out):
         pickle.dump(entry, fout, pickle.HIGHEST_PROTOCOL)
     
     print("Salvataggio completato")
+    
+def save_metrics_2(file_in, file_out):
+    '''
+    Salva un dizionario in un file.
+    
+    Parameters
+    ----------
+    file_in : str
+        path del file da analizzare che deve deve essere di tipo .txt
+    file_out: str
+        path del file in cui salvare la entry. Esso rappresenta un autore ed
+        esso è una RDD salvata in un file
+
+    Returns
+    -------
+    None
+    '''
+    
+    # RDD contenente i dizionari di un determinato autore
+	# Se il file non esiste quando farò il .collect() per ottenere la lista di
+    # dizionari verrà lanciata una eccezione che cattureremo poiché il fil_out
+    # non era presente
+    
+    file_out = file_out
+    
+    RDD_readed = sc.textFile(file_out)
+    
+    # calcolo il dizionario del nuovo libro
+    entry = generate_metrics(file_in)
+    
+    # prima trasformo l'RDD in struttura dati Python.
+    # poi aggiungo alla lista di dict quello nuovo
+    # passo dalla struttura Python all'RDD
+    # salvo l'RDD usando il metodo saveAsTextFile
+
+    try:
+        sc.parallelize(RDD_readed.collect().append(entry)).saveAsPickleFile(file_out, 1024)
+    except:
+        sc.parallelize([entry]).saveAsPickleFile(file_out, 1024)
 
 # %% Main
 if __name__ == "__main__":
@@ -527,17 +565,17 @@ if __name__ == "__main__":
             if author not in authors:
                 authors.append(author)
 
-        t = timer()
         for author in authors:
             for file in filelist:
                 if author in file:
                     result_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics', author) # si salva di default in author_metrics
-                    save_metrics(os.path.join(argument_path, file), result_path)
-        print("TIME: \n{} minuti".format(round((timer() - t)/60, 4)))
+                    save_metrics_2(os.path.join(argument_path, file), result_path)
     
     elif sys.argv[1] == '-s':
         for file in filelist:
             file = os.path.join(argument_path, file) # percorso assoluto dei file
-            save_metrics(file, file[:-4]) # salvo il risultato nella directory dove si trova il testo (il file ha lo stesso nome senza l'estensione finale)
+            
+            # salvo il risultato nella directory dove si trova il testo (il file ha lo stesso nome senza l'estensione finale)
+            save_metrics_2(file, file[:-4]) # tronchiamo gli ultimi 4 caratteri che sono ".txt"
 
     sc.stop()
