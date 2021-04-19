@@ -4,7 +4,6 @@ import os, sys, pyspark
 import math
 import pickle
 import shutil
-from timeit import default_timer as timer
 
 # %% Attributi sull'intero testo
 def word_counter(RDD):
@@ -527,13 +526,11 @@ if __name__ == "__main__":
             if author not in authors:
                 authors.append(author)
 
-        t = timer()
         for author in authors:
             for file in filelist:
                 if author in file:
                     result_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics', author) # si salva di default in author_metrics
                     save_metrics(os.path.join(argument_path, file), result_path)
-        print("TIME: \n{} minuti".format(round((timer() - t)/60, 4)))
     
     elif sys.argv[1] == '-s':
         for file in filelist:
