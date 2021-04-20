@@ -25,8 +25,20 @@ if __name__ == "__main__":
             
             path_authorship = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'authorship.py') # path assoluto del file authorship.py
             argument = os.path.abspath(opt[1]) # path assoluto della directory passata come argomento
-            os.system('spark-submit "' + path_authorship + '" -a "' + argument + '"')
             
+            ###################################################################################################################
+            os.system('hadoop fs -mkdir -p ' + argument)
+            
+            file_list =  os.listdir(argument)
+            
+            for i in range(0, len(file_list)):
+                file_list[i] = '"' + argument +'/' + file_list[i].replace(" ", "%20") + '"'
+            
+            string_files_argument = " ".join(file_list)         
+            os.system('hadoop fs -put -f ' + string_files_argument + " " + argument)
+            ###################################################################################################################
+            
+            os.system('spark-submit "' + path_authorship + '" -a "' + argument + '"')
             print("Fine processo di creazione e salvataggio delle metriche di libri conosciuti")
             
         if "-s" == opt[0]:
@@ -37,6 +49,19 @@ if __name__ == "__main__":
             print("#" * shutil.get_terminal_size()[0] * 2)
             
             path_authorship = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'authorship.py') # path assoluto del file authorship.py
+            
+            ###################################################################################################################
+            os.system('hadoop fs -mkdir -p ' + dir_unknown_books)
+            
+            file_list =  os.listdir(dir_unknown_books)
+            
+            for i in range(0, len(file_list)):
+                file_list[i] = '"' + dir_unknown_books +'/' + file_list[i].replace(" ", "%20") + '"'
+            
+            string_files_argument = " ".join(file_list)         
+            os.system('hadoop fs -put -f ' + string_files_argument + " " + dir_unknown_books)
+            ###################################################################################################################
+            
             os.system('spark-submit "' + path_authorship + '" -s "' + dir_unknown_books +'"')
             
             print("Fine processo di generazione delle metriche di libri sconosciuti")                
@@ -50,10 +75,6 @@ if __name__ == "__main__":
 
             print("Fine processo di analisi dei testi sconosciuti")
 
-            # rimozione dei file delle metriche
-            for file in os.listdir(dir_unknown_books):
-                if '.' in file:
-                    continue
-                
-                os.remove(os.path.join(dir_unknown_books, file))
+            # rimozione della cartella con i testi e i file delle metriche
+            os.system('hadoop fs -rm -r ' + dir_unknown_books)
             

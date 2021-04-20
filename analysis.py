@@ -250,7 +250,7 @@ if __name__ == "__main__":
     # list_dict_unknown_books è una lista di coppie della forma:
     # (nome_libro, dizionario_stilemi_libro)
     
-    list_dict_unknown_books =   (sc.parallelize(os.listdir(dir_unknown_books))
+    list_dict_unknown_books =   (sc.parallelize(client.list(dir_unknown_books))
                                  .filter(lambda x: "." not in x)
                                  .map(lambda x: (x, dir_unknown_books + "/" + x))
                                  # genero le metriche del testo sconosciuto 
