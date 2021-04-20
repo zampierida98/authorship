@@ -5,6 +5,8 @@ import pickle
 import shutil
 import statistics
 import numpy as np
+from hdfs import InsecureClient
+
 
 def verify_author(test_metrics, author_metrics_var):
     '''
@@ -154,9 +156,17 @@ def load_metrics_2(file_in):
         lista di dizionari degli attributi
     '''
     
-    RDD_readed = sc.textFile(file_in)
+    res = []
+    client = InsecureClient('http://quickstart.cloudera:50070')
+    
+    with client.read(file_in) as fin:
+        while True:
+            try:
+                res.append(pickle.load(fin))
+            except EOFError:
+                break
                 
-    return RDD_readed.collect()
+    return res
 
 def mean_std_couple(_list, tot_el):
     for i in range(0, tot_el - len(_list)):

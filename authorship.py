@@ -4,6 +4,8 @@ import os, sys, pyspark
 import math
 import pickle
 import shutil
+from hdfs import InsecureClient
+
 
 # %% Attributi sull'intero testo
 def word_counter(RDD):
@@ -514,37 +516,26 @@ def save_metrics_2(file_in, file_out):
     Parameters
     ----------
     file_in : str
-        path del file da analizzare che deve deve essere di tipo .txt
+        path del file da analizzare
     file_out: str
-        path del file in cui salvare la entry. Esso rappresenta un autore ed
-        esso è una RDD salvata in un file
+        path del file in cui salvare la entry
 
     Returns
     -------
     None
     '''
-    
-    # RDD contenente i dizionari di un determinato autore
-	# Se il file non esiste quando farò il .collect() per ottenere la lista di
-    # dizionari verrà lanciata una eccezione che cattureremo poiché il fil_out
-    # non era presente
-    
-    file_out = file_out
-    
-    RDD_readed = sc.textFile(file_out)
-    
-    # calcolo il dizionario del nuovo libro
+
     entry = generate_metrics(file_in)
     
-    # prima trasformo l'RDD in struttura dati Python.
-    # poi aggiungo alla lista di dict quello nuovo
-    # passo dalla struttura Python all'RDD
-    # salvo l'RDD usando il metodo saveAsTextFile
-
+    client = InsecureClient('http://quickstart.cloudera:50070')
     try:
-        sc.parallelize(RDD_readed.collect().append(entry)).saveAsPickleFile(file_out, 1024)
+        with client.write(file_out, append=True) as fout:
+            pickle.dump(entry, fout, pickle.HIGHEST_PROTOCOL)
     except:
-        sc.parallelize([entry]).saveAsPickleFile(file_out, 1024)
+        with client.write(file_out) as fout:
+            pickle.dump(entry, fout, pickle.HIGHEST_PROTOCOL)
+    
+    print("Salvataggio completato")
 
 # %% Main
 if __name__ == "__main__":
