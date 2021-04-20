@@ -229,12 +229,20 @@ if __name__ == "__main__":
     # authors è una lista di coppie della forma:
     # (nome_autore, dizionario_media_std_stilemi)
     dir_unknown_books = os.path.abspath(sys.argv[1])    
-    author_metrics_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics/')
     
     print("\nGenerazione per ogni autore delle medie e deviazioni standard...", end=" ")
+
+    client = InsecureClient('http://quickstart.cloudera:50070')
+    
+    author_metrics_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics/')
+        
     authors = []
-    for author in os.listdir(author_metrics_dir):
+    for author in client.list(author_metrics_dir):
         authors.append((author, author_metrics(author_metrics_dir + author)))
+        
+#    authors = []
+#    for author in os.listdir(author_metrics_dir):
+#        authors.append((author, author_metrics(author_metrics_dir + author)))
     
     print("completato")
     
