@@ -10,9 +10,9 @@ sudo rm /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/cloudera-cdh5.repo /e
 ```
 - Trasferire su Cloudera i file scaricati:
 ```
-docker cp --archive -L CentOS-Base.repo cloudera:/etc/yum.repos.d
-docker cp --archive -L cloudera-cdh5.repo cloudera:/etc/yum.repos.d
-docker cp --archive -L cloudera-manager.repo cloudera:/etc/yum.repos.d
+docker cp --archive -L CentOS-Base.repo cloudera:/etc/yum.repos.d/CentOS-Base.repo
+docker cp --archive -L cloudera-cdh5.repo cloudera:/etc/yum.repos.d/cloudera-cdh5.repo
+docker cp --archive -L cloudera-manager.repo cloudera:/etc/yum.repos.d/cloudera-manager.repo
 ```
 
 ## Installazione di Python 3.4
@@ -24,20 +24,10 @@ sudo yum install -y epel-release
 sudo yum install -y python34
 sudo yum install -y python34-setuptools
 ```
-- Scaricare `pip` tramite `curl`:
-```
-echo "[CityFan]
-name=City Fan Repo
-baseurl=http://www.city-fan.org/ftp/contrib/yum-repo/rhel$releasever/$basearch/
-enabled=1
-gpgcheck=0" > /etc/yum.repos.d/city-fan.repo
-
-sudo yum install -y curl
-
-curl -s https://bootstrap.pypa.io/pip/3.4/get-pip.py -o get-pip.py
-```
 - Installare ed aggiornare `pip`:
 ```
+sudo yum install -y wget
+wget https://bootstrap.pypa.io/pip/3.4/get-pip.py -O get-pip.py
 python3.4 get-pip.py
 pip install --upgrade pip
 ```
