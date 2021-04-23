@@ -485,31 +485,8 @@ def generate_metrics(file_in):
     
     print("Generazione completata con successo\n\n")
     return res
-    
+
 def save_metrics(file_in, file_out):
-    '''
-    Salva un dizionario in un file.
-    
-    Parameters
-    ----------
-    file_in : str
-        path del file da analizzare
-    file_out: str
-        path del file in cui salvare la entry
-
-    Returns
-    -------
-    None
-    '''
-
-    entry = generate_metrics(file_in)
-    
-    with open(file_out, 'ab') as fout:
-        pickle.dump(entry, fout, pickle.HIGHEST_PROTOCOL)
-    
-    print("Salvataggio completato")
-    
-def save_metrics_2(file_in, file_out):
     '''
     Salva un dizionario in un file.
     

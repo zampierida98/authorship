@@ -4,49 +4,94 @@ Progetto per l'esame del corso di Big Data
 ## Struttura del repository
 - `texts`: directory contenente 250 testi scritti da 10 autori diversi (25 testi per ogni autore) usati per formare l'insieme degli autori noti
 - `author_metrics`: directory contenente i file binari degli autori noti (rappresentano le caratteristiche di stile estratte dai testi da loro scritti)
-- `analyze_files`: directory contenente ?? testi (50 di autori già noti al sistema, ?? di autori sconosciuti) usati per testare la classificazione
+- `analyze_files`: directory contenente 100 testi usati per testare la classificazione, di cui 50 testi sono di 10 autori già noti al sistema e altri 50 testi sono di 10 autori sconosciuti
 - `main.py`: modulo principale da richiamare (ha il compito di eseguire i sottomoduli)
 - `authorship.py`: sottomodulo che salva le caratteristiche di stile estratte da uno o più testi (anche di autori diversi) forniti in input
 - `analysis.py`: sottomodulo che analizza i testi forniti in input ed esegue un processo di classificazione confrontando le loro caratteristiche di stile con quelle degli autori già noti al sistema
-- `Cloudera.md`: guida contenente le istruzioni per l'esecuzione del progetto su Cloudera
-- `main_hadoop.py`: modulo principale da richiamare in caso di esecuzione su Cloudera
 
-## Installazione
-- Controllare che Java Runtime Environment e Python siano installati.
-- Controllare che le seguenti librerie Python siano installate:
-	* numpy
-	* psutil
-	* pickle
-	* getopt
-	* statistics
-	* math
+## Esecuzione su Cloudera
+Istruzioni per l'esecuzione del progetto su Cloudera
 
-Nota: la maggior parte di queste dovrebbe già essere presente nella libreria Python standard
-
-- Scaricare Apache Spark 3 (per Hadoop 2.7) dal seguente link: https://spark.apache.org/downloads.html
-- Estrarre in una directory il contenuto del file scaricato
-
-## Esecuzione su Windows
-- Aggiungere la directory in cui si è installato Spark alla variabile d'ambiente `PATH` (sostituire `x` a seconda della versione scaricata):
+### Installazione di Docker
+- Scaricare Docker con il seguente comando (su Linux):
 ```
-set PATH=%PATH%;<spark_installation_path>\spark-3.x.x-bin-hadoop2.7\bin
+sudo curl -sSL https://get.docker.com/ | sh
 ```
-- Eseguire il file `main.py` tramite l'interprete Python, ad esempio per analizzare i testi in una directory:
+Nota: per installare Docker su Windows si veda https://docs.docker.com/docker-for-windows/install/
+- Controllare che la versione di Docker scaricata sia successiva alla 17:
 ```
-python main.py -s analyze_files
+docker --version
 ```
-
-## Esecuzione su Linux
-- Aggiungere la directory in cui si è installato Spark alla variabile d'ambiente `PATH` (sostituire `x` a seconda della versione scaricata):
+- Importare l'immagine di Cloudera QuickStart:
 ```
-export PATH=$PATH:<spark_installation_path>/spark-3.x.x-bin-hadoop2.7/bin
+service docker start
+docker pull cloudera/quickstart:latest
 ```
-- Eseguire il file `main.py` tramite l'interprete Python, ad esempio per analizzare i testi in una directory:
+- Lanciare il container (per la prima volta):
 ```
-python main.py -s analyze_files
+docker run --hostname=quickstart.cloudera --privileged=true -t -i -p 8888:8888 -p 80:80 -p 7180:7180 --name cloudera cloudera/quickstart /usr/bin/docker-quickstart
+```
+- Lanciare il container (dopo l'installazione) e interagire con esso:
+```
+docker ps -a
+docker start <CONTAINER_ID>
+docker exec -it cloudera /bin/bash
+```
+- Fermare il container e Docker:
+```
+docker stop <CONTAINER_ID>
+service docker stop
 ```
 
-## Note
+### Predisposizione dell'ambiente virtuale con Python 3
+Su Cloudera Pyspark gira di default su Python 2.6; siccome il progetto è stato sviluppato usando Python 3 è necessario installare Python 3.4 (l'ultima versione disponibile per Cloudera) e predisporre un ambiente virtuale in cui Pyspark possa girare su tale versione.
+
+Prima di fare ciò è necessario risolvere alcuni problemi legati al manager di pacchetti `yum`; a questo proposito è stato realizzato uno script bash che permette di automatizzare alcuni passaggi.
+- Scaricare il file `Cloudera.sh` contenente lo script bash
+- Copiare il file nel container:
+```
+docker cp --archive -L Cloudera.sh cloudera:/<directory>
+```
+- Eseguire lo script nella bash di Cloudera:
+```
+sh ./Cloudera.sh
+```
+Se tutto è andato a buon fine si dovrebbe essere in grado di richiamare il comando `python3.4`; in caso contrario provare a seguire le istruzioni passo passo descritte in questa [guida](https://github.com/zampierida98/authorship/tree/main/Risoluzione%20problemi/Guida.md).
+- Attivare l'ambiente virtuale in una nuova directory:
+```
+mkdir <directory>
+pyvenv <directory>
+source <directory>/bin/activate
+```
+A questo punto richiamando `pyspark` ci si può rendere conto che esso ora usa Python 3.4 mentre è in esecuzione.
+
+### Trasferimento del progetto nel container
+Una volta attivato l'ambiente virtuale con Python 3 è possibile trasferire l'applicativo nel container per cominciare ad utilizzarlo.
+- Copiare i file del progetto nel container (eseguire il comando nella directory della macchina fisica in cui si è scaricato il progetto stesso):
+```
+docker cp --archive -L authorship-main.zip cloudera:/<directory>
+```
+- Passare al terminale del container per estrarre i file del progetto appena trasferiti:
+```
+unzip /<directory>/authorship-main.zip
+```
+- Se si vogliono utilizzare i file autore già allenati durante la fase di test di questo progetto è necessario prima trasferirli su HDFS lanciando il seguente script Python:
+```
+python3.4 transfer_author_metrics.py
+```
+- Eseguire il file `main.py` per analizzare nuovi testi sconosciuti (i testi passati in input verranno automaticamente spostati su HDFS):
+```
+python3.4 main_hadoop.py -s <dir_testi_sconosciuti>
+```
+- Oppure eseguire il file `main.py` per aggiungere metriche di nuovi testi ai file degli autori noti (i testi passati in input verranno automaticamente spostati su HDFS):
+```
+python3.4 main_hadoop.py -a <dir_testi>
+```
+
+### Note
 - Durante l'esecuzione potrebbero essere stampati a video numerosi warnings generati da Spark.
-- Prestare attenzione alla versione di Python chiamata in quanto è necessario chiamare la versione 3; ad esempio potrebbe essere necessario specificare `python3.8`.
-- L'esecuzione su Windows richiede tempi maggiori sia rispetto a quella su Linux sia rispetto a quella su Cloudera.
+- Si ricordano i seguenti comandi utilizzabili per creare nuove directory e per spostare file su HDFS:
+```
+hadoop fs -mkdir -p /<directory>
+hadoop fs -put -f <URI_file_1 ... URI_file_n> /<directory>
+```
