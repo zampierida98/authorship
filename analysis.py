@@ -117,7 +117,7 @@ def search_tuple(_list, value):
 # Preparazione delle caratteristiche di stile complessive
 def load_metrics(file_in):
     '''
-    Carica i dizionari degli attributi presenti in un file che contiene un RDD.
+    Carica i dizionari degli attributi presenti in un file.
     
     Parameters
     ----------

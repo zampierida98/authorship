@@ -5,7 +5,7 @@ sudo rm /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/cloudera-cdh5.repo /e
 echo "[base]
 name=CentOS-6.6 - Base
 #mirrorlist=http://mirrorlist.centos.org/?release=6.6&arch=$basearch&repo=os
-baseurl=http://vault.centos.org/6.6/os/$basearch/
+baseurl=http://vault.centos.org/6.6/os/Source/$basearch/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
 
@@ -13,7 +13,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
 [updates]
 name=CentOS-6.6 - Updates
 #mirrorlist=http://mirrorlist.centos.org/?release=6.6&arch=$basearch&repo=updates
-baseurl=http://vault.centos.org/6.6/updates/$basearch/
+baseurl=http://vault.centos.org/6.6/updates/Source/$basearch/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
 
@@ -21,7 +21,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
 [extras]
 name=CentOS-6.6 - Extras
 #mirrorlist=http://mirrorlist.centos.org/?release=6.6&arch=$basearch&repo=extras
-baseurl=http://vault.centos.org/6.6/extras/$basearch/
+baseurl=http://vault.centos.org/6.6/extras/Source/$basearch/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
 
@@ -29,7 +29,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
 [centosplus]
 name=CentOS-6.6 - Plus
 #mirrorlist=http://mirrorlist.centos.org/?release=6.6&arch=$basearch&repo=centosplus
-baseurl=http://vault.centos.org/6.6/centosplus/$basearch/
+baseurl=http://vault.centos.org/6.6/centosplus/Source/$basearch/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
@@ -38,7 +38,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
 [contrib]
 name=CentOS-6.6 - Contrib
 #mirrorlist=http://mirrorlist.centos.org/?release=6.6&arch=$basearch&repo=contrib
-baseurl=http://vault.centos.org/6.6/contrib/$basearch/
+baseurl=http://vault.centos.org/6.6/contrib/Source/$basearch/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6" > /etc/yum.repos.d/CentOS-Base.repo
@@ -63,8 +63,16 @@ sudo yum install -y epel-release
 sudo yum install -y python34
 sudo yum install -y python34-setuptools
 
-sudo yum install -y wget
-wget https://bootstrap.pypa.io/pip/3.4/get-pip.py -O get-pip.py
+echo "[CityFan]
+name=City Fan Repo
+baseurl=http://www.city-fan.org/ftp/contrib/yum-repo/rhel$releasever/$basearch/
+enabled=1
+gpgcheck=0" > /etc/yum.repos.d/city-fan.repo
+
+sudo yum install -y curl
+
+curl -s https://bootstrap.pypa.io/pip/3.4/get-pip.py -o get-pip.py
+
 python3.4 get-pip.py
 pip install --upgrade pip
 

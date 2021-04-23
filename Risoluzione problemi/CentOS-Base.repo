@@ -1,7 +1,7 @@
 [base]
 name=CentOS-6.6 - Base
 #mirrorlist=http://mirrorlist.centos.org/?release=6.6&arch=$basearch&repo=os
-baseurl=http://vault.centos.org/6.6/os/$basearch/
+baseurl=http://vault.centos.org/6.6/os/Source/$basearch/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
 
@@ -9,7 +9,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
 [updates]
 name=CentOS-6.6 - Updates
 #mirrorlist=http://mirrorlist.centos.org/?release=6.6&arch=$basearch&repo=updates
-baseurl=http://vault.centos.org/6.6/updates/$basearch/
+baseurl=http://vault.centos.org/6.6/updates/Source/$basearch/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
 
@@ -17,7 +17,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
 [extras]
 name=CentOS-6.6 - Extras
 #mirrorlist=http://mirrorlist.centos.org/?release=6.6&arch=$basearch&repo=extras
-baseurl=http://vault.centos.org/6.6/extras/$basearch/
+baseurl=http://vault.centos.org/6.6/extras/Source/$basearch/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
 
@@ -25,7 +25,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
 [centosplus]
 name=CentOS-6.6 - Plus
 #mirrorlist=http://mirrorlist.centos.org/?release=6.6&arch=$basearch&repo=centosplus
-baseurl=http://vault.centos.org/6.6/centosplus/$basearch/
+baseurl=http://vault.centos.org/6.6/centosplus/Source/$basearch/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
@@ -34,7 +34,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
 [contrib]
 name=CentOS-6.6 - Contrib
 #mirrorlist=http://mirrorlist.centos.org/?release=6.6&arch=$basearch&repo=contrib
-baseurl=http://vault.centos.org/6.6/contrib/$basearch/
+baseurl=http://vault.centos.org/6.6/contrib/Source/$basearch/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
