@@ -537,13 +537,13 @@ if __name__ == "__main__":
             for file in filelist:
                 if author in file:
                     result_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics', author) # si salva di default in author_metrics
-                    save_metrics_2(os.path.join(argument_path, file), result_path)
+                    save_metrics(os.path.join(argument_path, file), result_path)
     
     elif sys.argv[1] == '-s':
         for file in filelist:
             file = os.path.join(argument_path, file) # percorso assoluto dei file
             
             # salvo il risultato nella directory dove si trova il testo (il file ha lo stesso nome senza l'estensione finale)
-            save_metrics_2(file, file[:-4]) # tronchiamo gli ultimi 4 caratteri che sono ".txt"
+            save_metrics(file, file[:-4]) # tronchiamo gli ultimi 4 caratteri che sono ".txt"
 
     sc.stop()

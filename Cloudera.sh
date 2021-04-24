@@ -63,6 +63,3 @@ sudo yum install -y wget
 wget https://bootstrap.pypa.io/pip/3.4/get-pip.py -O get-pip.py
 python3.4 get-pip.py
 pip install --upgrade pip
-
-pip install hdfs
-pip install numpy==1.15.4

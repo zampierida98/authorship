@@ -163,7 +163,7 @@ def author_metrics(author_name):
         dizionario con media e deviazione standard degli attributi
     '''
     
-    diz_list = load_metrics_2(author_name)
+    diz_list = load_metrics(author_name)
     res = {}
     
     # recupero gli attributi dai dizionari e li metto sotto la stessa chiave
@@ -229,7 +229,7 @@ if __name__ == "__main__":
                                  .map(lambda x: (x, dir_unknown_books + "/" + x))
                                  # genero le metriche del testo sconosciuto 
                                  # [0] perchè ritorna una lista con almeno un dizionario
-                                 .map(lambda x: (x[0], load_metrics_2(x[1])[0]))
+                                 .map(lambda x: (x[0], load_metrics(x[1])[0]))
                                  )
     print("completato")
     

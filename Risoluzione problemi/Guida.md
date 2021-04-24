@@ -31,8 +31,3 @@ wget https://bootstrap.pypa.io/pip/3.4/get-pip.py -O get-pip.py
 python3.4 get-pip.py
 pip install --upgrade pip
 ```
-- Installare la libreria hdfs e l'ultima versione della libreria numpy compatibile con Python 3.4:
-```
-pip install hdfs
-pip install numpy==1.15.4
-```

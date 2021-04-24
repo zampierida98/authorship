@@ -63,6 +63,11 @@ mkdir <directory>
 pyvenv <directory>
 source <directory>/bin/activate
 ```
+- Installare la libreria hdfs e l'ultima versione della libreria numpy compatibile con Python 3.4:
+```
+pip install hdfs
+pip install numpy==1.15.4
+```
 A questo punto richiamando `pyspark` ci si può rendere conto che esso ora usa Python 3.4 mentre è in esecuzione.
 
 ### Trasferimento del progetto nel container
@@ -77,7 +82,7 @@ wget https://github.com/zampierida98/authorship/archive/refs/heads/main.zip -O a
 ```
 - Estrarre i file del progetto:
 ```
-unzip /<directory>/authorship-main.zip
+unzip ./authorship-main.zip
 ```
 - Se si vogliono utilizzare i file autore già allenati durante la fase di test di questo progetto è necessario prima trasferirli su HDFS lanciando il seguente script Python:
 ```
