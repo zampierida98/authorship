@@ -71,7 +71,11 @@ Una volta attivato l'ambiente virtuale con Python 3 è possibile trasferire l'ap
 ```
 docker cp --archive -L authorship-main.zip cloudera:/<directory>
 ```
-- Passare al terminale del container per estrarre i file del progetto appena trasferiti:
+- Oppure scaricare il progetto direttamente nel container:
+```
+wget https://github.com/zampierida98/authorship/archive/refs/heads/main.zip -O authorship-main.zip
+```
+- Estrarre i file del progetto:
 ```
 unzip /<directory>/authorship-main.zip
 ```
