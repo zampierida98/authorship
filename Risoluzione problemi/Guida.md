@@ -24,10 +24,9 @@ sudo yum install -y epel-release
 sudo yum install -y python34
 sudo yum install -y python34-setuptools
 ```
-- Installare ed aggiornare `pip`:
+- Installare l'ultima versione di `pip` compatibile con Python 3.4:
 ```
 sudo yum install -y wget
 wget https://bootstrap.pypa.io/pip/3.4/get-pip.py -O get-pip.py
 python3.4 get-pip.py
-pip install --upgrade pip
 ```

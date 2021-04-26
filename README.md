@@ -63,8 +63,9 @@ mkdir <directory>
 pyvenv <directory>
 source <directory>/bin/activate
 ```
-- Installare la libreria hdfs e l'ultima versione della libreria numpy compatibile con Python 3.4:
+- Aggiornare `pip` per installare la libreria hdfs e l'ultima versione della libreria numpy compatibile con Python 3.4:
 ```
+pip install --upgrade pip
 pip install hdfs
 pip install numpy==1.15.4
 ```
