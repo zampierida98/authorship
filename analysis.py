@@ -5,8 +5,6 @@ import pickle
 import shutil
 import statistics
 import numpy as np
-from hdfs import InsecureClient
-
 
 def verify_author(test_metrics, author_metrics_var):
     '''
@@ -129,11 +127,10 @@ def load_metrics(file_in):
     list
         lista di dizionari degli attributi
     '''
-    
+
     res = []
-    client = InsecureClient('http://quickstart.cloudera:50070')
     
-    with client.read(file_in) as fin:
+    with open(file_in, "rb") as fin:
         while True:
             try:
                 res.append(pickle.load(fin))
@@ -203,20 +200,12 @@ if __name__ == "__main__":
     # authors è una lista di coppie della forma:
     # (nome_autore, dizionario_media_std_stilemi)
     dir_unknown_books = os.path.abspath(sys.argv[1])    
+    author_metrics_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics/')
     
     print("\nGenerazione per ogni autore delle medie e deviazioni standard...", end=" ")
-
-    client = InsecureClient('http://quickstart.cloudera:50070')
-    
-    author_metrics_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'author_metrics/')
-        
     authors = []
-    for author in client.list(author_metrics_dir):
+    for author in os.listdir(author_metrics_dir):
         authors.append((author, author_metrics(author_metrics_dir + author)))
-        
-#    authors = []
-#    for author in os.listdir(author_metrics_dir):
-#        authors.append((author, author_metrics(author_metrics_dir + author)))
     
     print("completato")
     
@@ -224,7 +213,7 @@ if __name__ == "__main__":
     # list_dict_unknown_books è una lista di coppie della forma:
     # (nome_libro, dizionario_stilemi_libro)
     
-    list_dict_unknown_books =   (sc.parallelize(client.list(dir_unknown_books))
+    list_dict_unknown_books =   (sc.parallelize(os.listdir(dir_unknown_books))
                                  .filter(lambda x: "." not in x)
                                  .map(lambda x: (x, dir_unknown_books + "/" + x))
                                  # genero le metriche del testo sconosciuto 

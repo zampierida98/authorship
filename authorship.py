@@ -4,8 +4,6 @@ import os, sys, pyspark
 import math
 import pickle
 import shutil
-from hdfs import InsecureClient
-
 
 # %% Attributi sull'intero testo
 def word_counter(RDD):
@@ -485,7 +483,7 @@ def generate_metrics(file_in):
     
     print("Generazione completata con successo\n\n")
     return res
-
+    
 def save_metrics(file_in, file_out):
     '''
     Salva un dizionario in un file.
@@ -504,13 +502,8 @@ def save_metrics(file_in, file_out):
 
     entry = generate_metrics(file_in)
     
-    client = InsecureClient('http://quickstart.cloudera:50070')
-    try:
-        with client.write(file_out, append=True) as fout:
-            pickle.dump(entry, fout, pickle.HIGHEST_PROTOCOL)
-    except:
-        with client.write(file_out) as fout:
-            pickle.dump(entry, fout, pickle.HIGHEST_PROTOCOL)
+    with open(file_out, 'ab') as fout:
+        pickle.dump(entry, fout, pickle.HIGHEST_PROTOCOL)
     
     print("Salvataggio completato")
 
@@ -542,8 +535,6 @@ if __name__ == "__main__":
     elif sys.argv[1] == '-s':
         for file in filelist:
             file = os.path.join(argument_path, file) # percorso assoluto dei file
-            
-            # salvo il risultato nella directory dove si trova il testo (il file ha lo stesso nome senza l'estensione finale)
-            save_metrics(file, file[:-4]) # tronchiamo gli ultimi 4 caratteri che sono ".txt"
+            save_metrics(file, file[:-4]) # salvo il risultato nella directory dove si trova il testo (il file ha lo stesso nome senza l'estensione finale)
 
     sc.stop()
