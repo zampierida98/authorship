@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo rm /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/cloudera-cdh5.repo /etc/yum.repos.d/cloudera-manager.repo
+sudo rm -f /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/cloudera-cdh5.repo /etc/yum.repos.d/cloudera-manager.repo 
 
 echo "[base]
 name=CentOS-6.6 - Base

@@ -91,11 +91,11 @@ python3.4 transfer_author_metrics.py
 ```
 - Eseguire il file `main.py` per analizzare nuovi testi sconosciuti (i testi passati in input verranno automaticamente spostati su HDFS):
 ```
-python3.4 main_hadoop.py -s <dir_testi_sconosciuti>
+python3.4 main.py -s <dir_testi_sconosciuti>
 ```
 - Oppure eseguire il file `main.py` per aggiungere metriche di nuovi testi ai file degli autori noti (i testi passati in input verranno automaticamente spostati su HDFS):
 ```
-python3.4 main_hadoop.py -a <dir_testi>
+python3.4 main.py -a <dir_testi>
 ```
 
 ### Note
