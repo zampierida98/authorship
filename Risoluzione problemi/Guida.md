@@ -3,16 +3,17 @@ Istruzioni per risolvere problemi con Cloudera
 
 ## Manager di pacchetti
 Innanzitutto bisogna controllare che il manager di pacchetti `yum` funzioni correttamente lanciando il comando `yum update`; se vengono restituiti degli errori effettuare la procedura seguente.
-- Scaricare i file `CentOS-Base.repo`, `cloudera-cdh5.repo` e `cloudera-manager.repo` dalla directory `File Cloudera` di questo repository.
+- Scaricare i file `CentOS-Base.repo`, `cloudera-cdh5.repo`, `cloudera-manager.repo` e `cloudera-accumulo.repo` dalla directory `Risoluzione problemi` di questo repository.
 - Rimuovere i corrispondenti file su Cloudera:
 ```
-sudo rm /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/cloudera-cdh5.repo /etc/yum.repos.d/cloudera-manager.repo
+sudo rm -f /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/cloudera-cdh5.repo /etc/yum.repos.d/cloudera-manager.repo /etc/yum.repos.d/cloudera-accumulo.repo
 ```
 - Trasferire su Cloudera i file scaricati:
 ```
 docker cp --archive -L CentOS-Base.repo cloudera:/etc/yum.repos.d/CentOS-Base.repo
 docker cp --archive -L cloudera-cdh5.repo cloudera:/etc/yum.repos.d/cloudera-cdh5.repo
 docker cp --archive -L cloudera-manager.repo cloudera:/etc/yum.repos.d/cloudera-manager.repo
+docker cp --archive -L cloudera-accumulo.repo cloudera:/etc/yum.repos.d/cloudera-accumulo.repo
 ```
 
 ## Installazione di Python 3.4

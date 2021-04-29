@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo rm -f /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/cloudera-cdh5.repo /etc/yum.repos.d/cloudera-manager.repo 
+sudo rm -f /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/cloudera-cdh5.repo /etc/yum.repos.d/cloudera-manager.repo /etc/yum.repos.d/cloudera-accumulo.repo 
 
 echo "[base]
 name=CentOS-6.6 - Base
@@ -53,6 +53,14 @@ baseurl=http://archive.cloudera.com/cm5/redhat/6/x86_64/cm/5/
 gpgkey=http://archive.cloudera.com/cm5/redhat/6/x86_64/cm/RPM-GPG-KEY-cloudera
 gpgcheck = 1
 enabled=0" > /etc/yum.repos.d/cloudera-manager.repo
+
+echo "[cloudera-accumulo]
+# Packages for Cloudera's Distribution of Accumulo, for CDH 5, on RedHat or CentOS 6 x86_64
+name=Cloudera's Distribution of Accumulo, for CDH 5
+baseurl=http://archive.cloudera.com/accumulo-c5/redhat/6/x86_64/cdh/5/
+gpgkey = http://archive.cloudera.com/accumulo-c5/redhat/6/x86_64/cdh/RPM-GPG-KEY-cloudera
+gpgcheck = 1
+enabled=0" > /etc/yum.repos.d/cloudera-accumulo.repo
 
 sudo yum update
 sudo yum install -y epel-release
