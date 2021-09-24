@@ -1,5 +1,7 @@
 # Authorship attribution
-Progetto per l'esame del corso di Big Data
+Progetto per l'esame del corso di Big Data.
+
+Per maggiori informazioni sulle tecnologie utilizzate e sui risultati dei nostri test di analisi stilistica, rimandiamo alla [documentazione](https://github.com/zampierida98/UniVR-informatica/blob/main/Magistrale%20I%20anno/progetto-SPARK/Documentazione.pdf).
 
 ## Struttura del repository
 - `texts`: directory contenente 250 testi scritti da 10 autori diversi (25 testi per ogni autore) usati per formare l'insieme degli autori noti
